@@ -43,7 +43,7 @@ function MyArrayProto() {
     }
     
     this.concat = function () {
-        let result = {};
+        let result = new MyArray();
         for (let i = 0; i < this.length; i++) {
             result[i] = this[i];
         }
@@ -63,7 +63,7 @@ function MyArrayProto() {
         [ this[i-1], this[this.length-i]] = [this[this.length-i], this[i-1]];
       }
 
-      let result = {};
+      let result = new MyArray();
 
       for (let i = 0; i < this.length; i++) {
         result[i] = this[i];
@@ -83,7 +83,7 @@ function MyArrayProto() {
 
     this.map = function (func) {
       // my
-      let result = {};
+      let result = new MyArray();
       for (let i = 0; i < this.length; i++) {
         result[i] = func(this[i], i, this);
       }
