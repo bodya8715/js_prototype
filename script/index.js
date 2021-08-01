@@ -10,27 +10,31 @@ function MyArrayProto() {
     
     this.pop = function () {
         // my
-        let value = this[this.length-1];
-        delete this[this.length-1];
-        this.length-=1;
+        if (this.length === 0) {
+          return;
+        }
+        const value = this[this.length-1];
+        delete this[--this.length];
         return value;
     }
     
     this.shift = function () {
         // my
-        let value = this[0];
-        for (let i = 0; i <= this.length-2; i++) {
+        if(this.length === 0) {
+          return;
+        }
+        const value = this[0];
+        for (let i = 0; i < this.length - 1; i++) {
             this[i] = this[i+1];
         }
-        delete this[this.length-1];
-        this.length-=1;
+        delete this[--this.length];
         return value;
     }
     
     this.unshift = function () {
         // my
-        let addAmount = arguments.length;
-        let newLength = addAmount + this.length;
+        const addAmount = arguments.length;
+        const newLength = addAmount + this.length;
         for(let i = newLength-1; i >= addAmount; i--) {
             this[i] = this[i-addAmount];
         }
@@ -40,19 +44,19 @@ function MyArrayProto() {
         }
 
         this.length = newLength;
+
+        return this.length;
     }
     
     this.concat = function () {
         let result = new MyArray();
         for (let i = 0; i < this.length; i++) {
-            result[i] = this[i];
+            result.push(this[i]);
         }
 
         for (let i = 0; i < arguments.length; i++) {
-            result[this.length+i] = arguments[i];
+          result.push(arguments[i]);
         }
-
-        result.length = this.length + arguments.length;
 
         return result;
     }
@@ -63,15 +67,7 @@ function MyArrayProto() {
         [ this[i-1], this[this.length-i]] = [this[this.length-i], this[i-1]];
       }
 
-      let result = new MyArray();
-
-      for (let i = 0; i < this.length; i++) {
-        result[i] = this[i];
-      }
-
-      result.length = this.length;
-
-      return result;
+      return this;
     }
 
     this.forEach = function (func) {
@@ -85,9 +81,9 @@ function MyArrayProto() {
       // my
       let result = new MyArray();
       for (let i = 0; i < this.length; i++) {
-        result[i] = func(this[i], i, this);
+        result.push(func(this[i], i, this));
       }
-      result.length = this.length;
+
       return result;
     }
   
@@ -115,21 +111,17 @@ function MyArrayProto() {
     
   }
   
-  function MyArray () {
+  function MyArray (...args) {
     this.length = 0;
 
-    for(let i = 0; i < arguments.length; i++) {
-      this.push(arguments[i]);
-    }
+    this.push(...args);
   }
 
   MyArray.isMyArray = function(arg) {
     return arg instanceof MyArray;
   }
-  
-  const myArrProto = new MyArrayProto();
-  
-  MyArray.prototype = myArrProto;
+
+  MyArray.prototype = new MyArrayProto();
   
   const myArr = new MyArray(1,2,3,'test');
   // const myArr2 = new MyArray();
